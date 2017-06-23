@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+	default-lazy-init="true"
+	>
+
+
+
+	<import resource="t1000_context.xml" />
+
+	<bean class="ru.javabegin.training.spring.main.MyBeanPostProcessor" />
+
+
+
+	<bean id="t1000Conveyor"
+		class="ru.javabegin.training.spring.impls.conveyor.T1000Conveyor">
+		<lookup-method name="createRobot" bean="t1000" />
+	</bean>
+
+	<bean id="t1000Pool" class="ru.javabegin.training.spring.impls.pool.T1000Pool">
+		<constructor-arg name="robotCollection">
+			<list>
+				<ref bean="t1000" />
+
+				<bean class="ru.javabegin.training.spring.impls.robot.ModelT1000"
+					parent="baseModel">
+
+					<constructor-arg value="gold" index="3" type="String" />
+					<constructor-arg value="2007" index="4" type="int" />
+					<constructor-arg value="false" index="5" type="boolean" />
+				</bean>
+
+				<bean class="ru.javabegin.training.spring.impls.robot.ModelT1000"
+					parent="baseModel">
+
+					<constructor-arg value="gold" index="3" type="String" />
+					<constructor-arg value="2009" index="4" type="int" />
+					<constructor-arg value="true" index="5" type="boolean" />
+				</bean>
+
+
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="t1000ColdenPool" class="ru.javabegin.training.spring.impls.pool.T1000Pool">
+		<constructor-arg name="robotCollection"
+			value="#{t1000Pool.robotCollection.?[color.toUpperCase() eq 'GOLD']}">
+		</constructor-arg>
+	</bean>
+
+</beans>
